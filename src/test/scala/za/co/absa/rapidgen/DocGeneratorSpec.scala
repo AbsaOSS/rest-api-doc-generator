@@ -28,13 +28,22 @@ import za.co.absa.rapidgen.DocGeneratorSpec.FooRESTConfig
 
 class DocGeneratorSpec extends AnyFlatSpec with Matchers {
 
+  behavior of "generateSwagger()"
+
+  private val swaggerJson = DocGenerator.generateSwagger(classOf[FooRESTConfig])
+
   it should "generate a valid Swagger definition" in {
-    val output = DocGenerator.generateSwagger(classOf[FooRESTConfig])
-    output should not be empty
-    output should startWith("""{"swagger":"2.0"""")
-    output should include("""/foo""")
-    output should include("""FOO-OPERATION""")
-    output should endWith("}")
+    swaggerJson should not be empty
+    swaggerJson should startWith("""{"swagger":"2.0"""")
+    swaggerJson should include("/foo")
+    swaggerJson should include("\"doh\"")
+    swaggerJson should endWith("}")
+  }
+
+  it should "return properly encoded UTF-8 content" in {
+    swaggerJson should not include "Â"
+    swaggerJson should not include "Ñ"
+    swaggerJson should include("Операция FOO")
   }
 }
 
@@ -52,7 +61,7 @@ object DocGeneratorSpec {
   @RequestMapping(produces = Array("application/json"))
   class FooController {
     @GetMapping(Array("/foo"))
-    @ApiOperation("FOO-OPERATION")
+    @ApiOperation("Операция FOO")
     def foo(): Foo = null
   }
 

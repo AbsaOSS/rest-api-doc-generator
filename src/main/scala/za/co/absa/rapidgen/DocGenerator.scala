@@ -30,7 +30,7 @@ object DocGenerator extends DocGenerator {
     MockMvcBuilders
       .webAppContextSetup(new SwaggerDocGenAppContext(contextClass))
       .build
-      .perform(get("/v2/api-docs") accept "application/json")
+      .perform(get("/v2/api-docs") accept "application/json;charset=UTF-8")
       .andExpect(status.isOk)
       .andReturn
       .getResponse
