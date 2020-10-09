@@ -45,6 +45,11 @@ class DocGeneratorSpec extends AnyFlatSpec with Matchers {
     swaggerJson should not include "Ñ"
     swaggerJson should include("Операция FOO")
   }
+
+  it should "generate a codegen friendly Swagger" in {
+    swaggerJson should not include "#/definitions/Seq«string»"
+    swaggerJson should include("#/definitions/SeqOfstring")
+  }
 }
 
 object DocGeneratorSpec {

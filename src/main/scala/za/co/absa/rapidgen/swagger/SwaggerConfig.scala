@@ -33,6 +33,7 @@ class SwaggerConfig @Autowired()(val typeResolver: TypeResolver)
 
   @Bean def api: Docket =
     new Docket(DocumentationType.SWAGGER_2).
+      forCodeGeneration(true).
       select.
       apis(RequestHandlerSelectors.any).
       paths(PathSelectors.any).
