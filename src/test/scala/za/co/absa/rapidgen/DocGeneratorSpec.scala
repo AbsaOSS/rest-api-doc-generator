@@ -47,8 +47,8 @@ class DocGeneratorSpec extends AnyFlatSpec with Matchers {
   }
 
   it should "generate a codegen friendly Swagger" in {
-    swaggerJson should not include "#/definitions/Seq«string»"
-    swaggerJson should include("#/definitions/SeqOfstring")
+    swaggerJson should not include "#/definitions/Seq«"
+    swaggerJson should not include "#/definitions/SeqOf"
   }
 }
 
@@ -70,7 +70,10 @@ object DocGeneratorSpec {
     def foo(): Foo = null
   }
 
-  case class Foo(bars: Seq[Bar])
+  case class Foo(
+    maybeBar: Option[Seq[Bar]],
+    seqOfBars: Seq[Seq[Bar]]
+  )
 
   case class Bar(doh: Map[Int, Seq[String]])
 
