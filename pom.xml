@@ -49,7 +49,7 @@
     </developers>
 
     <groupId>za.co.absa.utils</groupId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.6-SNAPSHOT</version>
     <artifactId>rest-api-doc-generator</artifactId>
     <packaging>jar</packaging>
 
@@ -60,6 +60,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.version>2.12.10</scala.version>
         <scala.binary.version>2.12</scala.binary.version>
+        <org.springframework>5.3.14</org.springframework>
+        <org.springframework.security>5.6.0</org.springframework.security>
+        <com.amazonaws>1.12.29</com.amazonaws>
+        <org.apache.avro>1.8.2</org.apache.avro>
+        <spark.version>3.2.1</spark.version>
+        <com.fasterxml.jackson>2.12.3</com.fasterxml.jackson>
     </properties>
 
     <scm>
@@ -78,12 +84,22 @@
         <dependency>
             <groupId>za.co.absa.commons</groupId>
             <artifactId>commons_${scala.binary.version}</artifactId>
-            <version>0.0.16</version>
+            <version>0.0.27</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-scala_${scala.binary.version}</artifactId>
-            <version>2.10.1</version>
+            <version>${com.fasterxml.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${com.fasterxml.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>finatra-jackson_${scala.binary.version}</artifactId>
+            <version>21.5.0</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -93,12 +109,27 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>5.2.2.RELEASE</version>
+            <version>${org.springframework}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>5.2.2.RELEASE</version>
+            <version>${org.springframework}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${org.springframework.security}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${org.springframework.security}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${org.springframework.security}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -119,6 +150,17 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala.binary.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.scala-lang.modules/scala-java8-compat -->
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-java8-compat_${scala.binary.version}</artifactId>
+            <version>0.9.1</version>
         </dependency>
 
         <!-- Test scope -->
