@@ -22,13 +22,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import za.co.absa.rapidgen.swagger.SwaggerDocGenAppContext
 
 trait DocGenerator {
-  def generateSwagger(contextClass: Class[_]): String
+  def generateSwagger(contextClass: Class[_], rapidGenConfig: Option[RapidGenConfig]): String
 }
 
 object DocGenerator extends DocGenerator {
-  override def generateSwagger(contextClass: Class[_]): String =
+  override def generateSwagger(contextClass: Class[_], rapidGenConfig: Option[RapidGenConfig]): String =
     MockMvcBuilders
-      .webAppContextSetup(new SwaggerDocGenAppContext(contextClass))
+      .webAppContextSetup(new SwaggerDocGenAppContext(contextClass, rapidGenConfig))
       .build
       .perform(get("/v2/api-docs") accept "application/json;charset=UTF-8")
       .andExpect(status.isOk)

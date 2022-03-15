@@ -1,0 +1,6 @@
+package za.co.absa.rapidgen
+
+object Constants {
+  val BLANK_HOST_PLACE_HOLDER = "BLANK_HOST_PLACE_HOLDER"
+  val BLANK_BASE_PATH_PLACE_HOLDER = "BLANK_BASE_PATH_PLACE_HOLDER"
+}

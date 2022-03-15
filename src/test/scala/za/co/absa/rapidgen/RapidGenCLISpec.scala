@@ -17,8 +17,9 @@
 package za.co.absa.rapidgen
 
 import java.io.File
-
 import org.apache.commons.io.FileUtils
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.OneInstancePerTest
 import org.scalatest.flatspec.AnyFlatSpec
@@ -55,17 +56,53 @@ class RapidGenCLISpec
 
   it should "print JSON to stdout by default" in {
     val dummyClass = classOf[Any]
-    when(genMock.generateSwagger(dummyClass)).thenReturn("{dummy JSON}")
+    when(genMock.generateSwagger(ArgumentMatchers.eq(dummyClass), any[Option[RapidGenConfig]])).thenReturn("{dummy JSON}")
     captureStdOut(cli.exec(Array("swagger", dummyClass.getName))) should be("{dummy JSON}")
   }
 
   it should "write to file" in {
     val dummyClass = classOf[Any]
-    when(genMock.generateSwagger(dummyClass)).thenReturn("{dummy JSON}")
     val tmpDir = TempDirectory().deleteOnExit().path.toFile
     val file = new File(tmpDir, "a/b/c")
+    val rapidGenConfig = Some(RapidGenConfig(Command.SwaggerCommand(Some(dummyClass)), Some(file), None, None))
+    when(genMock.generateSwagger(ArgumentMatchers.eq(dummyClass), any[Option[RapidGenConfig]])).thenReturn("{dummy JSON}")
     cli.exec(Array("swagger", "-o", file.getPath, dummyClass.getName))
     FileUtils.readFileToString(file, "UTF-8") should be("{dummy JSON}")
+  }
+
+  it should """remove "host":"localhost" if -h set and no host given""" in {
+    val dummyClass = classOf[Any]
+    when(genMock.generateSwagger(ArgumentMatchers.eq(dummyClass), any[Option[RapidGenConfig]])).
+      thenReturn(s"""{"dummy":"JSON","host":"${Constants.BLANK_HOST_PLACE_HOLDER}","basePath":"/"}""")
+    captureStdOut(cli.exec(Array("swagger", "-h", "", dummyClass.getName))) should be("""{"dummy":"JSON","basePath":"/"}""")
+  }
+
+  it should """remove "host":"localhost" if -h set and null host given""" in {
+    val dummyClass = classOf[Any]
+    when(genMock.generateSwagger(ArgumentMatchers.eq(dummyClass), any[Option[RapidGenConfig]])).
+      thenReturn(s"""{"dummy":"JSON","host":"${Constants.BLANK_HOST_PLACE_HOLDER}","basePath":"/"}""")
+    captureStdOut(cli.exec(Array("swagger", "-h", null, dummyClass.getName))) should be("""{"dummy":"JSON","basePath":"/"}""")
+  }
+
+  it should """replace "host":"localhost" with "host":"my-host" if -h my-host given""" in {
+    val dummyClass = classOf[Any]
+    when(genMock.generateSwagger(ArgumentMatchers.eq(dummyClass), any[Option[RapidGenConfig]])).
+      thenReturn(s"""{"dummy":"JSON","host":"my-host","basePath":"/"}""")
+    captureStdOut(cli.exec(Array("swagger", "-h", "my-host", dummyClass.getName))) should be("""{"dummy":"JSON","host":"my-host","basePath":"/"}""")
+  }
+
+  it should """replace "basePath":"/" with "basePath":"/rest" if -b /rest given""" in {
+    val dummyClass = classOf[Any]
+    when(genMock.generateSwagger(ArgumentMatchers.eq(dummyClass), any[Option[RapidGenConfig]])).
+      thenReturn(s"""{"dummy":"JSON","host":"localhost","basePath":"/rest"}""")
+    captureStdOut(cli.exec(Array("swagger", "-b", "/rest", dummyClass.getName))) should be("""{"dummy":"JSON","host":"localhost","basePath":"/rest"}""")
+  }
+
+  it should """remove "basePath":"/" if -b set and null base Path given""" in {
+    val dummyClass = classOf[Any]
+    when(genMock.generateSwagger(ArgumentMatchers.eq(dummyClass), any[Option[RapidGenConfig]])).
+      thenReturn(s"""{"dummy":"JSON","host":"localhost","basePath":"${Constants.BLANK_BASE_PATH_PLACE_HOLDER}"}""")
+    captureStdOut(cli.exec(Array("swagger", "-b", "/rest", dummyClass.getName))) should be("""{"dummy":"JSON","host":"localhost"}""")
   }
 }
 

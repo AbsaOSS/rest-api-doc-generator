@@ -16,28 +16,63 @@
 package za.co.absa.rapidgen.swagger
 
 import com.fasterxml.classmate.TypeResolver
+import org.slf4s.Logging
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.{Bean, Configuration}
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import springfox.documentation.PathProvider
 import springfox.documentation.builders.{PathSelectors, RequestHandlerSelectors}
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
+import za.co.absa.rapidgen.{Constants, RapidGenConfig}
 
 @Configuration
 @EnableSwagger2
-class SwaggerConfig @Autowired()(val typeResolver: TypeResolver)
+class SwaggerConfig(@Autowired() val typeResolver: TypeResolver,
+                    @Autowired val appContext: ApplicationContext)
   extends WebMvcConfigurer
     with SwaggerScalaTypesRules
     with SwaggerUISupport {
 
-  @Bean def api: Docket =
-    new Docket(DocumentationType.SWAGGER_2).
-      forCodeGeneration(true).
+  @Bean def api: Docket = {
+    var docket = new Docket(DocumentationType.SWAGGER_2).
+      forCodeGeneration(true)
+
+    if (appContext.isInstanceOf[SwaggerDocGenAppContext]) {
+      val rapidGenConfig = appContext.asInstanceOf[SwaggerDocGenAppContext].getRapidGenConfig
+      if (rapidGenConfig.isDefined) {
+        if (rapidGenConfig.get.overrideHost.isDefined) {
+          docket = docket.host(blankReplace(rapidGenConfig.get.overrideHost.get,
+            Constants.BLANK_HOST_PLACE_HOLDER))
+        }
+        if (rapidGenConfig.get.overrideBasePath.isDefined) {
+          val basePath = blankReplace(rapidGenConfig.get.overrideBasePath.get,
+            Constants.BLANK_BASE_PATH_PLACE_HOLDER)
+          docket = docket.pathProvider(new PathProvider() {
+            override def getApplicationBasePath: String = basePath
+
+            override def getOperationPath(operationPath: String): String = operationPath.replace(basePath, "")
+
+            override def getResourceListingPath(groupName: String, apiDeclaration: String): String = null
+          })
+        }
+      }
+    }
+    docket.
       select.
       apis(RequestHandlerSelectors.any).
       paths(PathSelectors.any).
       build
+  }
 
   @Bean def rpbPlugin = new SwaggerRequiredPropertyBuilderPlugin
+
+  private def blankReplace(original: String, replacement: String): String = {
+    if (original != null && !original.isBlank)
+      original
+    else
+      replacement
+  }
 }

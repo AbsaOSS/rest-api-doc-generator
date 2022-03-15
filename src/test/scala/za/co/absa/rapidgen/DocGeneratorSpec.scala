@@ -30,7 +30,7 @@ class DocGeneratorSpec extends AnyFlatSpec with Matchers {
 
   behavior of "generateSwagger()"
 
-  private val swaggerJson = DocGenerator.generateSwagger(classOf[FooRESTConfig])
+  private val swaggerJson = DocGenerator.generateSwagger(classOf[FooRESTConfig], None)
 
   it should "generate a valid Swagger definition" in {
     swaggerJson should not be empty
