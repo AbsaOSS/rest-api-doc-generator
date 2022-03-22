@@ -17,10 +17,10 @@
 package za.co.absa.rapidgen
 
 import org.slf4s.Logging
-
-import java.io.{File, FileWriter, OutputStreamWriter}
 import za.co.absa.commons.lang.ARM._
 import za.co.absa.rapidgen.Command.SwaggerCommand
+
+import java.io.{File, FileWriter, OutputStreamWriter}
 
 object RapidGenCLI extends App {
   new RapidGenCLI(DocGenerator).exec(args)
@@ -41,12 +41,12 @@ class RapidGenCLI(gen: DocGenerator) extends Logging {
       (opt[String]('h', "host")
         valueName "<host>"
         text "OpenAPI JSON override host"
-        action ((overrideHost, conf) => conf.copy(overrideHost = Some(overrideHost))))
+        action ((overrideHost, conf) => conf.copy(maybeHost = Some(overrideHost))))
 
       (opt[String]('b', "basePath")
         valueName "<host>"
         text "OpenAPI JSON override basePath"
-        action ((overrideBasePath, conf) => conf.copy(overrideBasePath = Some(overrideBasePath))))
+        action ((overrideBasePath, conf) => conf.copy(maybeBasePath = Some(overrideBasePath))))
 
       (cmd("swagger")
         action ((_, conf) => conf.copy(command = SwaggerCommand()))
@@ -69,9 +69,9 @@ class RapidGenCLI(gen: DocGenerator) extends Logging {
 
     val rapidGenConfig = cliParser.parse(args, RapidGenConfig())
     rapidGenConfig match {
-      case Some(RapidGenConfig(command, maybeOutFile, _, _)) =>
+      case Some(RapidGenConfig(command, maybeOutFile, maybeHost, maybeBasePath)) =>
         val writer = fileOrStdoutWriter(maybeOutFile)
-        val result = execute(command, rapidGenConfig).
+        val result = execute(command, maybeHost, maybeBasePath).
           replace(s""","host":"${Constants.BLANK_HOST_PLACE_HOLDER}"""", "").
           replace(s""","basePath":"${Constants.BLANK_BASE_PATH_PLACE_HOLDER}"""", "")
         using(writer)(_.write(result))
@@ -89,9 +89,13 @@ class RapidGenCLI(gen: DocGenerator) extends Logging {
         new OutputStreamWriter(Console.out))
   }
 
-  private def execute(command: Command, rapidGenConfig: Option[RapidGenConfig]) = {
+  private def execute(
+    command: Command,
+    maybeHost: Option[String],
+    maybeBasePath: Option[String]
+  ) = {
     command match {
-      case SwaggerCommand(Some(restContextClass)) => gen.generateSwagger(restContextClass, rapidGenConfig)
+      case SwaggerCommand(Some(restContextClass)) => gen.generateSwagger(restContextClass, maybeHost, maybeBasePath)
     }
   }
 }

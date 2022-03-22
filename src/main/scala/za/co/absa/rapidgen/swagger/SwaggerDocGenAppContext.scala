@@ -19,13 +19,15 @@ package za.co.absa.rapidgen.swagger
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.mock.web.MockServletContext
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
-import za.co.absa.rapidgen.{MockingBeanFactory, RapidGenConfig}
+import za.co.absa.rapidgen.MockingBeanFactory
 
-class SwaggerDocGenAppContext(contextClass: Class[_], rapidGenConfig: Option[RapidGenConfig]) extends AnnotationConfigWebApplicationContext {
+class SwaggerDocGenAppContext(
+  contextClass: Class[_],
+  val maybeHost: Option[String],
+  val maybeBasePath: Option[String]
+) extends AnnotationConfigWebApplicationContext {
 
   override def createBeanFactory: DefaultListableBeanFactory = new MockingBeanFactory(getInternalParentBeanFactory)
-
-  def getRapidGenConfig: Option[RapidGenConfig] = rapidGenConfig
 
   register(
     classOf[SwaggerConfig],

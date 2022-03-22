@@ -21,6 +21,6 @@ import java.io.File
 case class RapidGenConfig(
   command: Command = null,
   maybeOutputFile: Option[File] = None,
-  overrideHost: Option[String] = None,
-  overrideBasePath: Option[String] = None
+  maybeHost: Option[String] = None,
+  maybeBasePath: Option[String] = None
 )

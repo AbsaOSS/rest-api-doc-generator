@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package za.co.absa.rapidgen
+package za.co.absa.rapidgen.swagger
 
-object Constants {
-  val BLANK_HOST_PLACE_HOLDER = "BLANK_HOST_PLACE_HOLDER"
-  val BLANK_BASE_PATH_PLACE_HOLDER = "BLANK_BASE_PATH_PLACE_HOLDER"
+import springfox.documentation.spring.web.paths.AbstractPathProvider
+
+class CustomPathProvider(path: String) extends AbstractPathProvider {
+
+  override def applicationPath(): String = path
+
+  override def getDocumentationPath: String = "/"
 }
