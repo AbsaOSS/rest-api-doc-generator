@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ABSA Group Limited
+ * Copyright 2022 ABSA Group Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,7 @@
 
 package za.co.absa.rapidgen
 
-import java.io.File
-
-case class RapidGenConfig(
-  command: Command = null,
-  maybeOutputFile: Option[File] = None,
-  maybeHost: Option[String] = None,
-  maybeBasePath: Option[String] = None
-)
+object Constants {
+  val BLANK_HOST_PLACE_HOLDER = "BLANK_HOST_PLACE_HOLDER"
+  val BLANK_BASE_PATH_PLACE_HOLDER = "BLANK_BASE_PATH_PLACE_HOLDER"
+}

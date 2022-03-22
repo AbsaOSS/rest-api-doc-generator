@@ -30,7 +30,7 @@ class DocGeneratorSpec extends AnyFlatSpec with Matchers {
 
   behavior of "generateSwagger()"
 
-  private val swaggerJson = DocGenerator.generateSwagger(classOf[FooRESTConfig])
+  private val swaggerJson = DocGenerator.generateSwagger(classOf[FooRESTConfig], None, None)
 
   it should "generate a valid Swagger definition" in {
     swaggerJson should not be empty
@@ -49,6 +49,23 @@ class DocGeneratorSpec extends AnyFlatSpec with Matchers {
   it should "generate a codegen friendly Swagger" in {
     swaggerJson should not include "#/definitions/Seq«"
     swaggerJson should not include "#/definitions/SeqOf"
+  }
+
+  it should "generate a default host and basePath" in {
+    swaggerJson should include(""""host":"localhost"""")
+    swaggerJson should include(""""basePath":"/"""")
+  }
+
+  it should "generate a custom host" in {
+    val output = DocGenerator.generateSwagger(classOf[FooRESTConfig], Some("foo_host"), None)
+    output should include(""""host":"foo_host"""")
+    output should include(""""basePath":"/"""")
+  }
+
+  it should "generate a custom basePath" in {
+    val output = DocGenerator.generateSwagger(classOf[FooRESTConfig], None, Some("foo_path"))
+    output should include(""""host":"localhost"""")
+    output should include(""""basePath":"foo_path"""")
   }
 }
 

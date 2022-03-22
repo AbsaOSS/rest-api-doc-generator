@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ABSA Group Limited
+ * Copyright 2022 ABSA Group Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package za.co.absa.rapidgen
+package za.co.absa.rapidgen.swagger
 
-import java.io.File
+import springfox.documentation.spring.web.paths.AbstractPathProvider
 
-case class RapidGenConfig(
-  command: Command = null,
-  maybeOutputFile: Option[File] = None,
-  maybeHost: Option[String] = None,
-  maybeBasePath: Option[String] = None
-)
+class CustomPathProvider(path: String) extends AbstractPathProvider {
+
+  override def applicationPath(): String = path
+
+  override def getDocumentationPath: String = "/"
+}

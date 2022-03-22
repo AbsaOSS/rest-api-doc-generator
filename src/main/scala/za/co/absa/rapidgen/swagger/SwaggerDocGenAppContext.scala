@@ -21,7 +21,11 @@ import org.springframework.mock.web.MockServletContext
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
 import za.co.absa.rapidgen.MockingBeanFactory
 
-class SwaggerDocGenAppContext(contextClass: Class[_]) extends AnnotationConfigWebApplicationContext {
+class SwaggerDocGenAppContext(
+  contextClass: Class[_],
+  val maybeHost: Option[String],
+  val maybeBasePath: Option[String]
+) extends AnnotationConfigWebApplicationContext {
 
   override def createBeanFactory: DefaultListableBeanFactory = new MockingBeanFactory(getInternalParentBeanFactory)
 

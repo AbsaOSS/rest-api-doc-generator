@@ -23,21 +23,35 @@ import springfox.documentation.builders.{PathSelectors, RequestHandlerSelectors}
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
+import za.co.absa.rapidgen.Constants
 
 @Configuration
 @EnableSwagger2
-class SwaggerConfig @Autowired()(val typeResolver: TypeResolver)
-  extends WebMvcConfigurer
-    with SwaggerScalaTypesRules
-    with SwaggerUISupport {
+class SwaggerConfig(
+  @Autowired val typeResolver: TypeResolver,
+  @Autowired val appContext: SwaggerDocGenAppContext
+) extends WebMvcConfigurer
+  with SwaggerScalaTypesRules
+  with SwaggerUISupport {
 
-  @Bean def api: Docket =
-    new Docket(DocumentationType.SWAGGER_2).
-      forCodeGeneration(true).
-      select.
-      apis(RequestHandlerSelectors.any).
-      paths(PathSelectors.any).
-      build
+  @Bean def api: Docket = {
+    val docket = new Docket(DocumentationType.SWAGGER_2)
+
+    for (host <- appContext.maybeHost) {
+      docket.host(if (host.isBlank) Constants.BLANK_HOST_PLACE_HOLDER else host)
+    }
+    for (path <- appContext.maybeBasePath) {
+      docket.pathProvider(new CustomPathProvider(path))
+    }
+
+    docket
+      .forCodeGeneration(true)
+      .select
+      .apis(RequestHandlerSelectors.any)
+      .paths(PathSelectors.any)
+      .build
+  }
 
   @Bean def rpbPlugin = new SwaggerRequiredPropertyBuilderPlugin
+
 }
