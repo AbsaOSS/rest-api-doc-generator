@@ -38,7 +38,7 @@ class SwaggerConfig(
     val docket = new Docket(DocumentationType.SWAGGER_2)
 
     for (host <- appContext.maybeHost) {
-      docket.host(if (host == null || host.trim.isEmpty) Constants.BLANK_HOST_PLACE_HOLDER else host)
+      docket.host(if (host.trim.isEmpty) Constants.BLANK_HOST_PLACE_HOLDER else host)
     }
     for (path <- appContext.maybeBasePath) {
       docket.pathProvider(new CustomPathProvider(path))

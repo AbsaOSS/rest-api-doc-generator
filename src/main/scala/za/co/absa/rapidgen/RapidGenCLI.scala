@@ -41,12 +41,13 @@ class RapidGenCLI(gen: DocGenerator) extends Logging {
       (opt[String]('h', "host")
         valueName "<host>"
         text "OpenAPI JSON override host"
-        action ((overrideHost, conf) => conf.copy(maybeHost = Some(overrideHost))))
+        action ((overrideHost, conf) => conf.copy(maybeHost = Option(overrideHost))
+      ))
 
       (opt[String]('b', "basePath")
         valueName "<host>"
         text "OpenAPI JSON override basePath"
-        action ((overrideBasePath, conf) => conf.copy(maybeBasePath = Some(overrideBasePath))))
+        action ((overrideBasePath, conf) => conf.copy(maybeBasePath = Option(overrideBasePath))))
 
       (cmd("swagger")
         action ((_, conf) => conf.copy(command = SwaggerCommand()))
