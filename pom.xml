@@ -49,7 +49,7 @@
     </developers>
 
     <groupId>za.co.absa.utils</groupId>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.0.6</version>
     <artifactId>rest-api-doc-generator</artifactId>
     <packaging>jar</packaging>
 
@@ -66,7 +66,7 @@
         <url>${scm.url}</url>
         <connection>${scm.connection}</connection>
         <developerConnection>${scm.developerConnection}</developerConnection>
-        <tag>HEAD</tag>
+        <tag>release/1.0.6</tag>
     </scm>
 
     <dependencies>
