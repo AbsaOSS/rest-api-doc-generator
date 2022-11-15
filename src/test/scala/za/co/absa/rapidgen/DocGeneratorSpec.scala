@@ -17,11 +17,11 @@
 package za.co.absa.rapidgen
 
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.{ApiOperation, ApiParam}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.springframework.context.annotation.{Bean, Configuration}
-import org.springframework.web.bind.annotation.{GetMapping, RequestMapping, RestController}
+import org.springframework.web.bind.annotation.{GetMapping, RequestMapping, RequestParam, RestController}
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import za.co.absa.common.webmvc.jackson.ObjectMapperBeanPostProcessor
 import za.co.absa.rapidgen.DocGeneratorSpec.FooRESTConfig
@@ -84,7 +84,11 @@ object DocGeneratorSpec {
   class FooController {
     @GetMapping(Array("/foo"))
     @ApiOperation("Операция FOO")
-    def foo(): Foo = null
+    def foo(
+      // test for swagger-api/swagger-core#2783 and springfox/springfox#2528
+      @ApiParam(value = "p1")
+      @RequestParam(value = "p1", defaultValue = "-1") p1: Int
+    ): Foo = null
   }
 
   case class Foo(
