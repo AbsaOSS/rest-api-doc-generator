@@ -223,16 +223,17 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
-                        <manifest>
-                            <mainClass>za.co.absa.rapidgen.RapidGenCLI</mainClass>
-                        </manifest>
+                        <manifestEntries>
+                            <Main-Class>za.co.absa.rapidgen.RapidGenCLI</Main-Class>
+                            <Add-Opens>java.base/sun.net.www.protocol.jar</Add-Opens>
+                        </manifestEntries>
                     </archive>
                 </configuration>
                 <executions>
