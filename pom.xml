@@ -49,8 +49,8 @@
     </developers>
 
     <groupId>za.co.absa.utils</groupId>
-    <version>1.0.8-SNAPSHOT</version>
-    <artifactId>rest-api-doc-generator</artifactId>
+    <version>1.1.0-SNAPSHOT</version>
+    <artifactId>rest-api-doc-generator_2.11</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -58,8 +58,19 @@
         <scm.connection>scm:git:git://github.com/AbsaOSS/rest-api-doc-generator.git</scm.connection>
         <scm.developerConnection>scm:git:ssh://github.com/AbsaOSS/rest-api-doc-generator.git</scm.developerConnection>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scala.version>2.12.15</scala.version>
-        <scala.binary.version>2.12</scala.binary.version>
+
+        <!-- Cross build properties -->
+
+        <default.scala.binary.version>2.11</default.scala.binary.version>
+        <default.scala.version>${scala_2.11.version}</default.scala.version>
+
+        <scala_2.11.version>2.11.12</scala_2.11.version>
+        <scala_2.12.version>2.12.16</scala_2.12.version>
+        <scala_2.13.version>2.13.14</scala_2.13.version>
+
+        <!-- Controlled by `scala-cross-build` plugin -->
+        <scala.version>2.11.12</scala.version>
+        <scala.binary.version>2.11</scala.binary.version>
     </properties>
 
     <scm>
@@ -119,11 +130,6 @@
             <groupId>com.github.scopt</groupId>
             <artifactId>scopt_${scala.binary.version}</artifactId>
             <version>4.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4s</groupId>
-            <artifactId>slf4s-api_${scala.binary.version}</artifactId>
-            <version>1.7.25</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -245,10 +251,44 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.github.wajda</groupId>
+                <artifactId>scala-cross-build-maven-plugin</artifactId>
+                <version>0.2.2</version>
+                <configuration>
+                    <defaultScalaBinaryVersion>${default.scala.binary.version}</defaultScalaBinaryVersion>
+                    <defaultScalaVersion>${default.scala.version}</defaultScalaVersion>
+                    <generatePomBackupFiles>false</generatePomBackupFiles>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
     <profiles>
+        <profile>
+            <id>scala-2.11</id>
+            <properties>
+                <scala.binary.version>2.11</scala.binary.version>
+                <scala.version>${scala_2.11.version}</scala.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>scala-2.12</id>
+            <properties>
+                <scala.binary.version>2.12</scala.binary.version>
+                <scala.version>${scala_2.12.version}</scala.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>scala-2.13</id>
+            <properties>
+                <scala.binary.version>2.13</scala.binary.version>
+                <scala.version>${scala_2.13.version}</scala.version>
+            </properties>
+        </profile>
+
         <profile>
             <id>release</id>
             <build>

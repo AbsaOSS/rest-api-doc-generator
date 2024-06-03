@@ -16,21 +16,18 @@
 
 package za.co.absa.rapidgen
 
-import java.util
-
 import org.mockito.Mockito
-import org.slf4s.Logging
 import org.springframework.beans.TypeConverter
 import org.springframework.beans.factory.config.DependencyDescriptor
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.beans.factory.{BeanFactory, NoSuchBeanDefinitionException}
 
+import java.util
 import scala.util.Try
 
 
 class MockingBeanFactory(parentBeanFactory: BeanFactory)
-  extends DefaultListableBeanFactory(parentBeanFactory)
-    with Logging {
+  extends DefaultListableBeanFactory(parentBeanFactory) {
 
   override def doResolveDependency(descriptor: DependencyDescriptor,
                                    beanName: String,
@@ -42,7 +39,7 @@ class MockingBeanFactory(parentBeanFactory: BeanFactory)
     } recover {
       case ex: NoSuchBeanDefinitionException =>
         val beanType = ex.getBeanType
-        log.warn(s"Mocking missing bean of type '$beanType' for bean '${ex.getBeanName}'")
+        logger.warn(s"Mocking missing bean of type '$beanType' for bean '${ex.getBeanName}'")
         Mockito.mock(beanType.asInstanceOf[Class[AnyRef]])
     }).get
 }

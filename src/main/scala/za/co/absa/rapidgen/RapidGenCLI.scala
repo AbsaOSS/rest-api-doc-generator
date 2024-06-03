@@ -16,7 +16,6 @@
 
 package za.co.absa.rapidgen
 
-import org.slf4s.Logging
 import za.co.absa.commons.lang.ARM._
 import za.co.absa.rapidgen.Command.SwaggerCommand
 
@@ -26,7 +25,7 @@ object RapidGenCLI extends App {
   new RapidGenCLI(DocGenerator).exec(args)
 }
 
-class RapidGenCLI(gen: DocGenerator) extends Logging {
+class RapidGenCLI(gen: DocGenerator) {
   def exec(args: Array[String]): Unit = {
 
     val cliParser = new scopt.OptionParser[RapidGenConfig]("rest-doc-gen-tool") {
@@ -90,10 +89,10 @@ class RapidGenCLI(gen: DocGenerator) extends Logging {
   }
 
   private def execute(
-    command: Command,
-    maybeHost: Option[String],
-    maybeBasePath: Option[String]
-  ) = {
+                       command: Command,
+                       maybeHost: Option[String],
+                       maybeBasePath: Option[String]
+                     ) = {
     command match {
       case SwaggerCommand(Some(restContextClass)) => gen.generateSwagger(restContextClass, maybeHost, maybeBasePath)
     }

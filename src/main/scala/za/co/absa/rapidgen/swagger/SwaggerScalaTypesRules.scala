@@ -53,7 +53,7 @@ trait SwaggerScalaTypesRules extends AlternateTypeRuleConvention {
 
   private def newRecursiveRule(original: Type, alternate: Type, order: Int = Ordered.LOWEST_PRECEDENCE) = {
     val resolver = new TypeResolver
-    new AlternateRecursiveTypeRule(resolver.resolve(original), resolver.resolve(alternate), order, rules.asScala)
+    new AlternateRecursiveTypeRule(resolver.resolve(original), resolver.resolve(alternate), order, rules.asScala.toSeq)
   }
 
   override val rules: util.List[AlternateTypeRule] = util.Arrays.asList(
