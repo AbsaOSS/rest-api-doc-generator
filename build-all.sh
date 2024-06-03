@@ -32,6 +32,9 @@ print_title() {
 
 cross_build() {
   bin_ver=$1
+  command=$2
+  shift 2
+  additional_options="$*"
 
   # pre-cleaning
   for dir in $MODULE_DIRS; do
@@ -42,13 +45,40 @@ cross_build() {
   $MVN_EXEC scala-cross-build:change-version -Pscala-"$bin_ver"
 
   print_title "Building with Scala $bin_ver"
-  $MVN_EXEC install -Pscala-"$bin_ver" -DskipTests -T 1C || exit 1
+  $MVN_EXEC "$command" -Pscala-"$bin_ver" "$additional_options" || exit 1
 }
 
 # -------------------------------------------------------------------------------
 
+if [ $# -eq 0 ]; then
+  echo "Usage: ./build-all.sh <command> [options]"
+  echo "Commands:"
+  echo "  install: Run the install command"
+  echo "  deploy: Run the deploy command"
+  echo "Options:"
+  echo "  Any additional options that should be passed to the Maven command"
+  exit 1
+fi
+
+cmd_arg=$1
+shift
+additional_options="$*"
+
+case "$cmd_arg" in
+  "deploy")
+    command="deploy -Ddeploy -Dossrh"
+    ;;
+  "install")
+    command="install"
+    ;;
+  *)
+    echo "Error: Command '${cmd_arg}' not recognized."
+    exit 1
+    ;;
+esac
+
 for v in "${SCALA_VERSIONS[@]}"; do
-  cross_build "$v"
+  cross_build "$v" "$command" "$additional_options"
 done
 
 print_title "Restoring POM-files"
