@@ -45,7 +45,7 @@ cross_build() {
   $MVN_EXEC scala-cross-build:change-version -Pscala-"$bin_ver"
 
   print_title "Building with Scala $bin_ver"
-  $MVN_EXEC "$command" -Pscala-"$bin_ver" "$additional_options" || exit 1
+  $MVN_EXEC $command -Pscala-"$bin_ver" $additional_options || exit 1
 }
 
 # -------------------------------------------------------------------------------
