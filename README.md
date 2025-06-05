@@ -1,6 +1,6 @@
 # REST API Doc Generator
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/za.co.absa.utils/rest-api-doc-generator/badge.svg)](https://search.maven.org/search?q=g:za.co.absa.utils)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/za.co.absa.utils/rest-api-doc-generator_2.12/badge.svg)](https://search.maven.org/search?q=g:za.co.absa.utils)
 [![TeamCity build](https://teamcity.jetbrains.com/app/rest/builds/aggregated/strob:%28locator:%28buildType:%28id:OpenSourceProjects_AbsaOSS_RestApiDocGenerator_AutoBuild%29,branch:master%29%29/statusIcon.svg)](https://teamcity.jetbrains.com/viewType.html?buildTypeId=OpenSourceProjects_AbsaOSS_RestApiDocGenerator_AutoBuild&branch=master&tab=buildTypeStatusDiv)
 ### Usage
 
